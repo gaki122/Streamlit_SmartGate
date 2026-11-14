@@ -3,7 +3,7 @@ Smart Gate - Informative Website (Streamlit)
 A Face Recognition-Based Entry and Exit Management System
 for Samtse College of Education.
 
-Module : Python GUI Programming  |  BED IT 'C'  |  Academic Year 2026
+Module : Python GUI Programming  |  B.Ed IT 'C'  |  Academic Year 2026
 Run    : streamlit run app.py
 """
 
@@ -658,37 +658,82 @@ if selected_page == NAV_ITEMS[5]:
 
 # ============================== 7. DATABASE ==================================
 if selected_page == NAV_ITEMS[6]:
-    section("fa-solid fa-database", "Database design", "One user has many logs. Data stays on the local PC in SQLite.")
+    section("fa-solid fa-database", "Database design", "Smart Gate entities, attributes, keys and relationships.")
     st.graphviz_chart("""
     digraph ERD {
-      rankdir=LR; bgcolor="transparent"; nodesep=0.6; ranksep=1.2;
+      rankdir=LR; bgcolor="transparent"; nodesep=0.45; ranksep=0.8;
       node [shape=plaintext, fontname="Helvetica", fontcolor="#51473d"];
-      edge [color="#8b6548", fontcolor="#80543b", fontname="Helvetica", penwidth=2];
-      USERS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8b6548">
-        <TR><TD BGCOLOR="#d9a475"><B>USERS</B></TD></TR>
-        <TR><TD ALIGN="LEFT">uid (PK)</TD></TR><TR><TD ALIGN="LEFT">name</TD></TR>
-        <TR><TD ALIGN="LEFT">role (Student / Lecturer)</TD></TR><TR><TD ALIGN="LEFT">programme</TD></TR>
-        <TR><TD ALIGN="LEFT">face photo location</TD></TR></TABLE>>];
-      LOGS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8b6548">
-        <TR><TD BGCOLOR="#d9a475"><B>LOGS</B></TD></TR>
-        <TR><TD ALIGN="LEFT">uid (links to users.uid)</TD></TR><TR><TD ALIGN="LEFT">date</TD></TR>
-        <TR><TD ALIGN="LEFT">time</TD></TR><TR><TD ALIGN="LEFT">entry / exit status</TD></TR></TABLE>>];
-      STAFF [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8b6548">
-        <TR><TD BGCOLOR="#d9a475"><B>STAFF</B></TD></TR>
-        <TR><TD ALIGN="LEFT">guard / admin login</TD></TR><TR><TD ALIGN="LEFT">salted PBKDF2 hash</TD></TR>
-        <TR><TD ALIGN="LEFT">role</TD></TR></TABLE>>];
-      APP_META [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="7" COLOR="#8b6548">
-        <TR><TD BGCOLOR="#d9a475"><B>APP_META</B></TD></TR><TR><TD ALIGN="LEFT">application information</TD></TR></TABLE>>];
-      USERS -> LOGS [label=" 1 : many "];
+      edge [color="#8b6548", fontcolor="#80543b", fontname="Helvetica", fontsize=10, penwidth=1.5, arrowsize=0.7];
+      USERS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>USERS</B></TD></TR>
+        <TR><TD>PK</TD><TD ALIGN="LEFT">uid</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">name</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">programme</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">type</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">course</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">email</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">faces</TD><TD ALIGN="LEFT">INTEGER</TD></TR></TABLE>>];
+      LOGS [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>LOGS</B></TD></TR>
+        <TR><TD>PK</TD><TD ALIGN="LEFT">id</TD><TD ALIGN="LEFT">INTEGER</TD></TR>
+        <TR><TD>FK</TD><TD ALIGN="LEFT">uid</TD><TD ALIGN="LEFT">users.uid</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">action</TD><TD ALIGN="LEFT">TEXT (Entry/Exit)</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">ts</TD><TD ALIGN="LEFT">TEXT (date + time)</TD></TR>
+        <TR><TD>FK</TD><TD ALIGN="LEFT">student_id</TD><TD ALIGN="LEFT">INT</TD></TR></TABLE>>];
+      STUDENT [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>STUDENT</B></TD></TR>
+        <TR><TD>PK</TD><TD ALIGN="LEFT">student_id</TD><TD ALIGN="LEFT">INT NOT NULL</TD></TR>
+        <TR><TD>AK</TD><TD ALIGN="LEFT">student_code</TD><TD ALIGN="LEFT">VARCHAR(100) NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">full_name</TD><TD ALIGN="LEFT">VARCHAR(120) NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">class_name</TD><TD ALIGN="LEFT">VARCHAR(50)</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">status</TD><TD ALIGN="LEFT">VARCHAR(20) NOT NULL</TD></TR></TABLE>>];
+      GATE [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>GATE</B></TD></TR>
+        <TR><TD>PK</TD><TD ALIGN="LEFT">gate_id</TD><TD ALIGN="LEFT">INT NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">gate_name</TD><TD ALIGN="LEFT">VARCHAR(50) NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">location</TD><TD ALIGN="LEFT">VARCHAR(100)</TD></TR>
+        <TR><TD>AK</TD><TD ALIGN="LEFT">device_code</TD><TD ALIGN="LEFT">VARCHAR(50)</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">status</TD><TD ALIGN="LEFT">VARCHAR(20) NOT NULL</TD></TR></TABLE>>];
+      STAFF [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>ADMIN / MANAGEMENT / GUARD</B></TD></TR>
+        <TR><TD>PK, FK</TD><TD ALIGN="LEFT">username</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">full_name</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">role</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">salt</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">pw</TD><TD ALIGN="LEFT">TEXT (hash)</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">active</TD><TD ALIGN="LEFT">INTEGER</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">created</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">last_login</TD><TD ALIGN="LEFT">TEXT</TD></TR></TABLE>>];
+      CHECKIN_CHECKOUT [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>CHECKIN_CHECKOUT</B></TD></TR>
+        <TR><TD>PK</TD><TD ALIGN="LEFT">access_id</TD><TD ALIGN="LEFT">INT NOT NULL</TD></TR>
+        <TR><TD>FK</TD><TD ALIGN="LEFT">student_id</TD><TD ALIGN="LEFT">INT NOT NULL</TD></TR>
+        <TR><TD>FK</TD><TD ALIGN="LEFT">gate_id</TD><TD ALIGN="LEFT">INT NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">access_type</TD><TD ALIGN="LEFT">VARCHAR(10) NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">access_time</TD><TD ALIGN="LEFT">TIMESTAMP NOT NULL</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">verification_method</TD><TD ALIGN="LEFT">VARCHAR(30)</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">remarks</TD><TD ALIGN="LEFT">VARCHAR(255)</TD></TR>
+        <TR><TD>FK</TD><TD ALIGN="LEFT">username</TD><TD ALIGN="LEFT">VARCHAR(80)</TD></TR></TABLE>>];
+      APP_META [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="5" COLOR="#8b6548">
+        <TR><TD COLSPAN="3" BGCOLOR="#d9a475"><B>APP_META</B></TD></TR>
+        <TR><TD>PK</TD><TD ALIGN="LEFT">key</TD><TD ALIGN="LEFT">TEXT</TD></TR>
+        <TR><TD></TD><TD ALIGN="LEFT">value</TD><TD ALIGN="LEFT">TEXT</TD></TR></TABLE>>];
+
+      USERS -> LOGS [label="1 : many (uid)"];
+      STUDENT -> LOGS [label="1 : many (student audit trail)"];
+      USERS -> STAFF [label="managed accounts"];
+      STUDENT -> CHECKIN_CHECKOUT [label="1 : many (records)"];
+      GATE -> CHECKIN_CHECKOUT [label="1 : many (captures)"];
+      STAFF -> CHECKIN_CHECKOUT [label="verifies events"];
     }
     """)
-    st.caption("The link between logs.uid and users.uid is made in the application code (no SQL FOREIGN KEY is declared). "
-               "STAFF and APP_META are standalone.")
+    st.caption("PK = primary key, FK = foreign key, AK = alternate key. APP_META has no relationship to the other tables.")
 
     section("fa-solid fa-table", "Example record", "What one gate activity looks like")
     st.dataframe(pd.DataFrame([{
-        "User ID": "08230220", "Full Name": "Karma Wangchuk", "Role": "Student",
-        "Face data": "Face scan saved", "Entry/Exit Status": "Entry", "Date": "07/08/2026", "Time": "08:15 AM",
+        "Access ID": 1, "Student ID": 23001, "Gate ID": 1, "Access Type": "Entry",
+        "Access Time": "2026-08-07 08:15:00", "Verification Method": "Face recognition",
+        "Remarks": "", "Username": "guard01",
     }]), hide_index=True)
 
     callout("fa-solid fa-lock", "Privacy first",
@@ -720,7 +765,7 @@ if selected_page == NAV_ITEMS[7]:
 # ----------------------------------------------------------------------------
 # TEAM + FOOTER (always visible)
 # ----------------------------------------------------------------------------
-section("fa-solid fa-people-group", "Meet the crew", "BED IT ‘C’  •  Python GUI Programming  •  Tutor: Phurba Dorji Tamang")
+section("fa-solid fa-people-group", "Meet the crew", "B.Ed IT ‘C’  •  Python GUI Programming  •  Tutor: Phurba Dorji Tamang")
 grid([f'<div class="member"><div class="avatar"><img src="{image_data_uri(filename)}" alt="Portrait of {name}"></div>'
       f'<h4>{name}</h4><p>Smart Gate team</p></div>'
       for name, filename in TEAM], "g5")
